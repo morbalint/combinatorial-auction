@@ -147,14 +147,32 @@ let partialRoutes = [
 
 type Route = {
     player: Player;
-    nodes: Node list;
+    edges: (Edge * Direction) list;
     capacity: double;
+    price: double;
 }
 
-// TODO: this should be calculated;
-let routes = [
-    { player = players.[1]; nodes = [ nodes.[0]; nodes.[1] ]; capacity = edges.[0].capacityNegative };
-    {  }
+let routes =
+    partialRoutes
+    |> List.map
+        (fun r -> {
+            player = r.player;
+            edges = r.edges;
+            capacity =
+                r.edges
+                |> List.map (fun (e,d) ->
+                    match d with
+                    | Positive -> e.capacityPositive
+                    | Negative -> e.capacityNegative)
+                |> List.min
+            price =
+                r.edges
+                |> List.map (fun (e,d) ->
+                    edgePrices
+                    |> List.choose (fun p -> if p.player = r.player && p.edge = e then Some p.price else None)
+                    |> List.head)
+                |> List.sum
+        })
 ]
 
 [<EntryPoint>]
