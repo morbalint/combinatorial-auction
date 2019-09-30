@@ -1,4 +1,4 @@
-// Learn more about F# at http://fsharp.org
+﻿// Learn more about F# at http://fsharp.org
 
 open System
 
@@ -9,10 +9,10 @@ type Node = {
 
 type Edge = {
     id: int;
-   fromNode : Node;
-   toNode : Node;
-   capacityPositive : double;
-   capacityNegative : double;
+    fromNode : Node;
+    toNode : Node;
+    capacityPositive : double;
+    capacityNegative : double;
 }
 
 type Player = {
@@ -173,7 +173,28 @@ let routes =
                     |> List.head)
                 |> List.sum
         })
-]
+
+type Bid = {
+    route: Route;
+    quantity: double;
+    totalPrice: double;
+}
+
+let bids =
+    routes
+    |> List.map (fun r -> [{
+        route = r;
+        quantity =
+            [
+                r.capacity;
+                demands
+                |> List.filter (fun d -> d.player = r.player)
+                |> List.map (fun d -> d.toAmount - d.fromAmount)
+                |> List.head // TODO use linq select many
+            ]
+            |> List.min;
+        totalPrice = 0.0;
+    }])
 
 [<EntryPoint>]
 let main argv =
