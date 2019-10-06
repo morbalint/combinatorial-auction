@@ -182,21 +182,22 @@ type Bid = {
 
 let bids =
     routes
-    |> List.map (fun r -> [{
-        route = r;
-        quantity =
-            [
-                r.capacity;
-                demands
-                |> List.filter (fun d -> d.player = r.player)
-                |> List.map (fun d -> d.toAmount - d.fromAmount)
-                |> List.head // TODO use linq select many
-            ]
-            |> List.min;
-        totalPrice = 0.0;
-    }])
+    |> List.map (fun r ->
+        let sourcePrice = prices |> List.filter (fun sp -> sp.toConsumer = r.player && sp.fromProducer = r.edges.[0]
+        demands 
+        |> List.filter (fun d -> d.player = r.player)
+        |> List.map (fun d -> 
+            let quantity = List.min [ r.capacity; d.toAmount - d.fromAmount ];
+            {
+                route = r;
+                quantity = quantity
+                totalPrice = quantity * (d.price - r.price - prices.[0].price );
+            })
+    )
+)
 
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
+    printfn "%A" bids
     0 // return an integer exit code
