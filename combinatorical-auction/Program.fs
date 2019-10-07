@@ -1,6 +1,7 @@
 ﻿// Learn more about F# at http://fsharp.org
 
 open System
+open Newtonsoft.Json
 
 type Node = {
     production: double;
@@ -27,7 +28,7 @@ type TransferCost = {
 }
 
 type SourcePrices = {
-    fromProducer: Player;
+    fromProducer: Node;
     toConsumer: Player;
     price: double;
 }
@@ -106,9 +107,9 @@ let edgePrices = [
 ]
 
 let prices = [
-    { fromProducer = players.[0]; toConsumer = players.[1]; price = 25.0; };
-    { fromProducer = players.[0]; toConsumer = players.[2]; price = 23.0; };
-    { fromProducer = players.[0]; toConsumer = players.[3]; price = 20.0; };
+    { fromProducer = nodes.[0]; toConsumer = players.[1]; price = 25.0; };
+    { fromProducer = nodes.[0]; toConsumer = players.[2]; price = 23.0; };
+    { fromProducer = nodes.[0]; toConsumer = players.[3]; price = 20.0; };
 ]
 
 let demands = [
@@ -152,27 +153,29 @@ type Route = {
     price: double;
 }
 
-let routes =
-    partialRoutes
-    |> List.map
-        (fun r -> {
-            player = r.player;
-            edges = r.edges;
-            capacity =
-                r.edges
-                |> List.map (fun (e,d) ->
-                    match d with
-                    | Positive -> e.capacityPositive
-                    | Negative -> e.capacityNegative)
-                |> List.min
-            price =
-                r.edges
-                |> List.map (fun (e,d) ->
-                    edgePrices
-                    |> List.choose (fun p -> if p.player = r.player && p.edge = e then Some p.price else None)
-                    |> List.head)
-                |> List.sum
-        })
+let calcRouteCapacity (edges: (Edge * Direction) list) =
+    edges
+    |> List.map (fun (e,d) ->
+        match d with
+        | Positive -> e.capacityPositive
+        | Negative -> e.capacityNegative)
+    |> List.min
+
+let calcRoutePrice (edgePrices: EdgePrice list) (route: PartialRoute) =
+    route.edges
+    |> List.map (fun (e,d) ->
+        edgePrices
+        |> List.choose (fun p -> if p.player = route.player && p.edge = e then Some p.price else None)
+        |> List.head)
+    |> List.sum
+
+let priceSingeRoute (edgePrices: EdgePrice list) (route: PartialRoute) =
+    {
+        player = route.player;
+        edges = route.edges;
+        capacity = calcRouteCapacity route.edges
+        price = calcRoutePrice edgePrices route
+    }
 
 type Bid = {
     route: Route;
@@ -180,24 +183,52 @@ type Bid = {
     totalPrice: double;
 }
 
-let bids =
+let getSourceNodeFromRoute route =
+    let (firstEdge, firstDirection) = route.edges.[0];
+    match firstDirection with
+    | Positive -> firstEdge.fromNode
+    | Negative -> firstEdge.toNode
+
+let calcSourcePriceFromPricesAndRoute prices route =
+    let sourceNode = getSourceNodeFromRoute route
+    let sourcePrice =
+        prices
+        |> List.filter (fun sp -> sp.toConsumer = route.player && sp.fromProducer = sourceNode)
+        |> List.map (fun sp -> sp.price)
+    match sourcePrice with
+    | [] -> failwith "source price not found"
+    | head::[] -> head
+    | _::_ -> failwith "too many source prices found"
+
+let calcSourcePrice = calcSourcePriceFromPricesAndRoute prices;
+
+let calcBidsForSingleRoute (demands: Demand list) route =
+    let sourcePrice = calcSourcePrice route
+    demands
+    |> List.filter (fun d -> d.player = route.player)
+    |> List.map (fun d ->
+        let quantity = List.min [ route.capacity; d.toAmount - d.fromAmount ];
+        {
+            route = route;
+            quantity = quantity;
+            totalPrice = quantity * (d.price - route.price - sourcePrice );
+        })
+    |> List.filter (fun bid -> bid.totalPrice > 0.0)
+
+let calcBids (demands: Demand list) routes =
     routes
-    |> List.map (fun r ->
-        let sourcePrice = prices |> List.filter (fun sp -> sp.toConsumer = r.player && sp.fromProducer = r.edges.[0]
-        demands 
-        |> List.filter (fun d -> d.player = r.player)
-        |> List.map (fun d -> 
-            let quantity = List.min [ r.capacity; d.toAmount - d.fromAmount ];
-            {
-                route = r;
-                quantity = quantity
-                totalPrice = quantity * (d.price - r.price - prices.[0].price );
-            })
-    )
-)
+    |> List.map (calcBidsForSingleRoute demands)
+    |> List.concat
+    |> List.sortByDescending (fun bid -> bid.totalPrice)
 
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
+    let routes = List.map (priceSingeRoute edgePrices) partialRoutes;
+    printfn "routes:"
+    printfn "%A" routes
+    let bids = calcBids demands routes
+    printfn "bids:"
     printfn "%A" bids
+    System.IO.File.WriteAllText("output.json", JsonConvert.SerializeObject bids)
     0 // return an integer exit code
