@@ -163,11 +163,10 @@ let calcRouteCapacity (edges: (Edge * Direction) list) =
 
 let calcRoutePrice (edgePrices: EdgePrice list) (route: PartialRoute) =
     route.edges
-    |> List.map (fun (e,d) ->
+    |> List.sumBy (fun (e,d) ->
         edgePrices
         |> List.choose (fun p -> if p.player = route.player && p.edge = e then Some p.price else None)
         |> List.head)
-    |> List.sum
 
 let priceSingeRoute (edgePrices: EdgePrice list) (route: PartialRoute) =
     {
@@ -197,7 +196,7 @@ let calcSourcePriceFromPricesAndRoute prices route =
         |> List.map (fun sp -> sp.price)
     match sourcePrice with
     | [] -> failwith "source price not found"
-    | head::[] -> head
+    | [head] -> head
     | _::_ -> failwith "too many source prices found"
 
 let calcSourcePrice = calcSourcePriceFromPricesAndRoute prices;
@@ -207,19 +206,17 @@ let calcBidsForSingleRoute (demands: Demand list) route =
     demands
     |> List.filter (fun d -> d.player = route.player)
     |> List.map (fun d ->
-        let quantity = List.min [ route.capacity; d.toAmount - d.fromAmount ];
         {
             route = route;
-            quantity = quantity;
-            totalPrice = quantity * (d.price - route.price - sourcePrice );
+            quantity = d.toAmount;
+            totalPrice = d.toAmount * (d.price - route.price - sourcePrice );
         })
     |> List.filter (fun bid -> bid.totalPrice > 0.0)
 
 let calcBids (demands: Demand list) routes =
     routes
-    |> List.map (calcBidsForSingleRoute demands)
-    |> List.concat
-    |> List.sortByDescending (fun bid -> bid.totalPrice)
+    |> List.collect (calcBidsForSingleRoute demands)
+    |> List.sortBy (fun bid -> bid.route.player.id)
 
 [<EntryPoint>]
 let main argv =

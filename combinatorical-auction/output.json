@@ -1,0 +1,1114 @@
+[
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 75.0,
+            "price": 8.0
+        },
+        "quantity": 30.0,
+        "totalPrice": 450.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 75.0,
+            "price": 8.0
+        },
+        "quantity": 70.0,
+        "totalPrice": 490.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 75.0,
+            "price": 8.0
+        },
+        "quantity": 100.0,
+        "totalPrice": 100.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 1,
+                        "fromNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 80.0,
+                        "capacityNegative": 80.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 13.0
+        },
+        "quantity": 30.0,
+        "totalPrice": 300.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 1,
+                        "fromNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 80.0,
+                        "capacityNegative": 80.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 13.0
+        },
+        "quantity": 70.0,
+        "totalPrice": 140.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 6,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 12.5
+        },
+        "quantity": 30.0,
+        "totalPrice": 315.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 6,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 12.5
+        },
+        "quantity": 70.0,
+        "totalPrice": 175.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 5,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 19.5
+        },
+        "quantity": 30.0,
+        "totalPrice": 105.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 70.0,
+            "price": 11.0
+        },
+        "quantity": 30.0,
+        "totalPrice": 360.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 70.0,
+            "price": 11.0
+        },
+        "quantity": 70.0,
+        "totalPrice": 280.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 1,
+                        "fromNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 80.0,
+                        "capacityNegative": 80.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 5,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 13.5
+        },
+        "quantity": 30.0,
+        "totalPrice": 285.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 1,
+                        "fromNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 80.0,
+                        "capacityNegative": 80.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 5,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 13.5
+        },
+        "quantity": 70.0,
+        "totalPrice": 105.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 6,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 9.5
+        },
+        "quantity": 30.0,
+        "totalPrice": 405.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 6,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 9.5
+        },
+        "quantity": 70.0,
+        "totalPrice": 385.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 2,
+                "node": {
+                    "production": -100.0,
+                    "id": 3
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 5,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 16.5
+        },
+        "quantity": 30.0,
+        "totalPrice": 195.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 1,
+                        "fromNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 80.0,
+                        "capacityNegative": 80.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 80.0,
+            "price": 9.0
+        },
+        "quantity": 40.0,
+        "totalPrice": 520.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 1,
+                        "fromNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 80.0,
+                        "capacityNegative": 80.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                }
+            ],
+            "capacity": 80.0,
+            "price": 9.0
+        },
+        "quantity": 70.0,
+        "totalPrice": 350.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 6.0
+        },
+        "quantity": 40.0,
+        "totalPrice": 640.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 6.0
+        },
+        "quantity": 70.0,
+        "totalPrice": 560.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 5,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 15.5
+        },
+        "quantity": 40.0,
+        "totalPrice": 260.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 2,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 75.0,
+                        "capacityNegative": 75.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 6,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 5,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 14.5
+        },
+        "quantity": 40.0,
+        "totalPrice": 300.0
+    },
+    {
+        "route": {
+            "player": {
+                "id": 1,
+                "node": {
+                    "production": -95.0,
+                    "id": 2
+                }
+            },
+            "edges": [
+                {
+                    "Item1": {
+                        "id": 3,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": 1000.0,
+                            "id": 1
+                        },
+                        "capacityPositive": 70.0,
+                        "capacityNegative": 70.0
+                    },
+                    "Item2": {
+                        "Case": "Negative"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 6,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 4
+                        },
+                        "toNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                },
+                {
+                    "Item1": {
+                        "id": 4,
+                        "fromNode": {
+                            "production": -100.0,
+                            "id": 3
+                        },
+                        "toNode": {
+                            "production": -95.0,
+                            "id": 2
+                        },
+                        "capacityPositive": 60.0,
+                        "capacityNegative": 60.0
+                    },
+                    "Item2": {
+                        "Case": "Positive"
+                    }
+                }
+            ],
+            "capacity": 60.0,
+            "price": 17.0
+        },
+        "quantity": 40.0,
+        "totalPrice": 200.0
+    }
+]
