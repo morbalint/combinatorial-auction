@@ -100,7 +100,7 @@ let edgePrices = [
     { player = players.[3]; edge = edges.[3]; price = 4.0; }
     { player = players.[1]; edge = edges.[4]; price = 4.5; }
     { player = players.[2]; edge = edges.[4]; price = 4.5; }
-    { player = players.[3]; edge = edges.[4]; price = 4.5; }
+    { player = players.[3]; edge = edges.[4]; price = 1.5; }
     { player = players.[1]; edge = edges.[5]; price = 5.0; }
     { player = players.[2]; edge = edges.[5]; price = 1.5; }
     { player = players.[3]; edge = edges.[5]; price = 5.0; }
@@ -121,32 +121,34 @@ let demands = [
     { player = players.[2]; fromAmount = 70.0; toAmount = 100.0; price = 32.0; }
     { player = players.[3]; fromAmount = 0.0; toAmount = 50.0; price = 53.0; }
     { player = players.[3]; fromAmount = 50.0; toAmount = 80.0; price = 49.0; }
-    { player = players.[3]; fromAmount = 80.0; toAmount = 100.0; price = 36.0; }
+    { player = players.[3]; fromAmount = 80.0; toAmount = 105.0; price = 36.0; }
 ]
 
 type PartialRoute = {
+    id: int;
     player: Player;
     edges: (Edge * Direction) list;
 }
 
 // TODO: this should be calculated;
 let partialRoutes = [
-    { player = players.[1]; edges = [ edges.[0], Negative ]; }
-    { player = players.[1]; edges = [ edges.[1], Negative; edges.[3], Positive ]; }
-    { player = players.[1]; edges = [ edges.[2], Negative; edges.[4], Positive ]; }
-    { player = players.[1]; edges = [ edges.[1], Negative; edges.[5], Negative; edges.[4], Positive ]; }
-    { player = players.[1]; edges = [ edges.[2], Negative; edges.[5], Positive; edges.[3], Positive ]; }
-    { player = players.[2]; edges = [ edges.[1], Negative ]; }
-    { player = players.[2]; edges = [ edges.[0], Negative; edges.[3], Negative ]; }
-    { player = players.[2]; edges = [ edges.[2], Negative; edges.[5], Positive ]; }
-    { player = players.[2]; edges = [ edges.[2], Negative; edges.[4], Positive; edges.[3], Negative ]; }
-    { player = players.[2]; edges = [ edges.[2], Negative ]; }
-    { player = players.[2]; edges = [ edges.[0], Negative; edges.[4], Negative ]; }
-    { player = players.[2]; edges = [ edges.[1], Negative; edges.[5], Negative ]; }
-    { player = players.[2]; edges = [ edges.[1], Negative; edges.[3], Positive; edges.[4], Negative ]; }
+    { id = 1; player = players.[1]; edges = [ edges.[0], Negative ]; }
+    { id = 2; player = players.[1]; edges = [ edges.[1], Negative; edges.[3], Positive ]; }
+    { id = 3; player = players.[1]; edges = [ edges.[2], Negative; edges.[4], Positive ]; }
+    { id = 4; player = players.[1]; edges = [ edges.[1], Negative; edges.[5], Negative; edges.[4], Positive ]; }
+    { id = 5; player = players.[1]; edges = [ edges.[2], Negative; edges.[5], Positive; edges.[3], Positive ]; }
+    { id = 1; player = players.[2]; edges = [ edges.[1], Negative ]; }
+    { id = 2; player = players.[2]; edges = [ edges.[0], Negative; edges.[3], Negative ]; }
+    { id = 4; player = players.[2]; edges = [ edges.[2], Negative; edges.[5], Positive ]; }
+    { id = 3; player = players.[2]; edges = [ edges.[2], Negative; edges.[4], Positive; edges.[3], Negative ]; }
+    { id = 1; player = players.[3]; edges = [ edges.[2], Negative ]; }
+    { id = 2; player = players.[3]; edges = [ edges.[0], Negative; edges.[4], Negative ]; }
+    { id = 3; player = players.[3]; edges = [ edges.[1], Negative; edges.[5], Negative ]; }
+    { id = 4; player = players.[3]; edges = [ edges.[1], Negative; edges.[3], Positive; edges.[4], Negative ]; }
 ]
 
 type Route = {
+    id: int;
     player: Player;
     edges: (Edge * Direction) list;
     capacity: double;
@@ -170,6 +172,7 @@ let calcRoutePrice (edgePrices: EdgePrice list) (route: PartialRoute) =
 
 let priceSingeRoute (edgePrices: EdgePrice list) (route: PartialRoute) =
     {
+        id = route.id;
         player = route.player;
         edges = route.edges;
         capacity = calcRouteCapacity route.edges
@@ -203,29 +206,53 @@ let calcSourcePrice = calcSourcePriceFromPricesAndRoute prices;
 
 let calcBidsForSingleRoute (demands: Demand list) route =
     let sourcePrice = calcSourcePrice route
-    demands
-    |> List.filter (fun d -> d.player = route.player)
-    |> List.map (fun d ->
-        {
-            route = route;
-            quantity = d.toAmount;
-            totalPrice = d.toAmount * (d.price - route.price - sourcePrice );
-        })
-    |> List.filter (fun bid -> bid.totalPrice > 0.0)
+    let bidPieces =
+        demands
+        |> List.filter (fun d -> d.player = route.player)
+        |> List.sortBy  (fun d -> d.fromAmount)
+        |> List.map (fun d ->
+            {
+                route = route;
+                quantity = d.toAmount;
+                totalPrice = (d.toAmount - d.fromAmount) * ( d.price - route.price - sourcePrice );
+            })
+    let (bids, _) =
+        List.mapFold
+            (fun state piece -> ( { piece with totalPrice = piece.totalPrice + state } , (state + piece.totalPrice) ) )
+            0.0
+            bidPieces
+    bids |> List.filter (fun bid -> bid.totalPrice > 0.0)
 
 let calcBids (demands: Demand list) routes =
     routes
     |> List.collect (calcBidsForSingleRoute demands)
+    |> List.sortBy (fun bid -> bid.quantity)
     |> List.sortBy (fun bid -> bid.route.player.id)
+
+type BidViewModel = {
+    routeId: int;
+    playerId: int;
+    quantity: double;
+    totalPrice: double;
+}
+
+let bid2viewModel bid =
+    {
+        routeId = bid.route.id;
+        playerId = bid.route.player.id;
+        quantity = bid.quantity;
+        totalPrice = bid.totalPrice;
+    }
 
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
     let routes = List.map (priceSingeRoute edgePrices) partialRoutes;
     printfn "routes:"
-    printfn "%A" routes
+    //printfn "%A" routes
     let bids = calcBids demands routes
     printfn "bids:"
-    printfn "%A" bids
-    System.IO.File.WriteAllText("output.json", JsonConvert.SerializeObject bids)
+    let truncatedOutput = List.map bid2viewModel bids
+    printfn "%A" truncatedOutput
+    System.IO.File.WriteAllText("output.json", JsonConvert.SerializeObject truncatedOutput)
     0 // return an integer exit code
