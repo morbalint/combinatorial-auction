@@ -4,7 +4,7 @@ open System
 open Newtonsoft.Json
 
 type Node = {
-    production: double;
+    production: float;
     id: int
 }
 
@@ -12,8 +12,8 @@ type Edge = {
     id: int;
     fromNode : Node;
     toNode : Node;
-    capacityPositive : double;
-    capacityNegative : double;
+    capacityPositive : float;
+    capacityNegative : float;
 }
 
 type Player = {
@@ -24,27 +24,27 @@ type Player = {
 type TransferCost = {
     onEdge: Edge;
     forPlayer: Player;
-    price: double;
+    price: float;
 }
 
 type SourcePrices = {
     fromProducer: Node;
     toConsumer: Player;
-    price: double;
+    price: float;
 }
 
 // piece of constant inverse demand curve
 type Demand = {
     player: Player;
-    fromAmount: double;
-    toAmount: double;
-    price: double;
+    fromAmount: float;
+    toAmount: float;
+    price: float;
 }
 
 type EdgePrice = {
     player: Player;
     edge: Edge;
-    price: double;
+    price: float;
 }
 
 type Direction =
@@ -54,8 +54,8 @@ type Direction =
 type Transport = {
     player: Player;
     onEdge: Edge;
-    Price: double;
-    amount: double;
+    Price: float;
+    amount: float;
     direction: Direction;
 }
 
@@ -151,8 +151,8 @@ type Route = {
     id: int;
     player: Player;
     edges: (Edge * Direction) list;
-    capacity: double;
-    price: double;
+    capacity: float;
+    price: float;
 }
 
 let calcRouteCapacity (edges: (Edge * Direction) list) =
@@ -181,8 +181,8 @@ let priceSingeRoute (edgePrices: EdgePrice list) (route: PartialRoute) =
 
 type Bid = {
     route: Route;
-    quantity: double;
-    totalPrice: double;
+    quantity: float;
+    totalPrice: float;
 }
 
 let getSourceNodeFromRoute route =
@@ -211,7 +211,7 @@ let calcBidsForSingleRoute (demands: Demand list) route =
         |> List.filter (fun d -> d.player = route.player)
         |> List.sortBy  (fun d -> d.fromAmount)
         |> List.map (fun d ->
-            {
+            {        
                 route = route;
                 quantity = d.toAmount;
                 totalPrice = (d.toAmount - d.fromAmount) * ( d.price - route.price - sourcePrice );
@@ -228,21 +228,69 @@ let calcBids (demands: Demand list) routes =
     |> List.collect (calcBidsForSingleRoute demands)
     |> List.sortBy (fun bid -> bid.quantity)
     |> List.sortBy (fun bid -> bid.route.player.id)
+    |> List.indexed
 
 type BidViewModel = {
+    id: int;
     routeId: int;
     playerId: int;
-    quantity: double;
-    totalPrice: double;
+    quantity: float;
+    totalPrice: float;
 }
 
-let bid2viewModel bid =
+let bid2viewModel (idx,bid) =
     {
+        id = idx;
         routeId = bid.route.id;
         playerId = bid.route.player.id;
         quantity = bid.quantity;
         totalPrice = bid.totalPrice;
     }
+
+type ConstraintRow = {
+    weights: float list;
+    upperBound: float;
+}
+
+let createRowFromPlayerConstraints numberOfAllBids bids = 
+    Array.map (fun n -> if (List.contains n bids) then 1.0 else 0.0) [|0..numberOfAllBids|]
+
+let calcPlayerConstraints bids =
+    let createRow = createRowFromPlayerConstraints (List.length bids)
+    bids 
+    |> List.groupBy (fun bid -> bid.playerId)
+    |> List.map (fun (_, subBids) -> subBids |> List.map (fun x -> x.id) |> createRow )
+
+let edgeConstraintTupleFromBids (bids: (int * Bid * Edge * Direction) list) =
+    bids
+    |> List.map 
+        (fun (idx,bid,_,dir) ->
+            match dir with
+            | Positive -> (idx, bid.quantity)
+            | Negative -> (idx, -bid.quantity)
+        )
+
+let createrRowFromEdgeConstraints numberOfAllBids (constraints: (int*float) list) =
+    Array.map (fun n ->
+            match (List.tryFind (fun (idx, _) -> n = idx) constraints) with
+            | Some (_, weight) -> weight
+            | None -> 0.0
+    ) [| 0..numberOfAllBids |]
+
+let calcEdgeConstraints bids = 
+    let createRow = createrRowFromEdgeConstraints (List.length bids)
+    bids 
+    |> List.collect (fun (idx,bid) -> bid.route.edges |> List.map (fun (e,d) -> (idx, bid, e,d)))
+    |> List.groupBy (fun (idx, bid, edge, direction) -> edge.id)
+    |> List.collect 
+        (fun (_, l) -> 
+            let (_,_,edge,_) = (List.head l)
+            let constraints = edgeConstraintTupleFromBids l
+            let row = createRow constraints
+            [ (row, edge.capacityPositive);
+              ((Array.map ((*) -1.0) row), edge.capacityNegative)]
+        )
+
 
 [<EntryPoint>]
 let main argv =
@@ -252,7 +300,15 @@ let main argv =
     //printfn "%A" routes
     let bids = calcBids demands routes
     printfn "bids:"
-    let truncatedOutput = List.map bid2viewModel bids
-    printfn "%A" truncatedOutput
-    System.IO.File.WriteAllText("output.json", JsonConvert.SerializeObject truncatedOutput)
+    let bidsView = List.map bid2viewModel bids
+    printfn "%A" bidsView
+    System.IO.File.WriteAllText("bids.json", JsonConvert.SerializeObject bidsView)
+    let playerConstraints = calcPlayerConstraints bidsView
+    printfn "player constraints:\n%A" playerConstraints
+    let edgeConstraints = calcEdgeConstraints bids
+    printfn "edge constrainds:\n%A" edgeConstraints
+    let aMatrix = List.concat [ playerConstraints; (List.map (fun (row, _) -> row) edgeConstraints) ]
+    let bVector = List.concat [ (List.replicate (List.length playerConstraints) 1.0); (List.map (fun (_, ub) -> ub) edgeConstraints) ]
+    System.IO.File.WriteAllText("A.json", JsonConvert.SerializeObject aMatrix)
+    System.IO.File.WriteAllText("b.json", JsonConvert.SerializeObject bVector)
     0 // return an integer exit code
