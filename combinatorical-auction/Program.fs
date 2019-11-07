@@ -1,7 +1,8 @@
 ﻿// Learn more about F# at http://fsharp.org
 
-open System
 open Newtonsoft.Json
+open MathNet.Numerics
+open MathNet.Numerics.Data.Matlab
 
 type Node = {
     production: float;
@@ -253,7 +254,7 @@ type ConstraintRow = {
 }
 
 let createRowFromPlayerConstraints numberOfAllBids bids = 
-    Array.map (fun n -> if (List.contains n bids) then 1.0 else 0.0) [|0..numberOfAllBids|]
+    Array.map (fun n -> if (List.contains n bids) then 1.0 else 0.0) [|0..numberOfAllBids-1|]
 
 let calcPlayerConstraints bids =
     let createRow = createRowFromPlayerConstraints (List.length bids)
@@ -296,19 +297,23 @@ let calcEdgeConstraints bids =
 let main argv =
     printfn "Hello World from F#!"
     let routes = List.map (priceSingeRoute edgePrices) partialRoutes;
-    printfn "routes:"
-    //printfn "%A" routes
     let bids = calcBids demands routes
-    printfn "bids:"
     let bidsView = List.map bid2viewModel bids
-    printfn "%A" bidsView
     System.IO.File.WriteAllText("bids.json", JsonConvert.SerializeObject bidsView)
     let playerConstraints = calcPlayerConstraints bidsView
-    printfn "player constraints:\n%A" playerConstraints
     let edgeConstraints = calcEdgeConstraints bids
-    printfn "edge constrainds:\n%A" edgeConstraints
+    let fVector = List.map (fun x -> x.totalPrice) bidsView
     let aMatrix = List.concat [ playerConstraints; (List.map (fun (row, _) -> row) edgeConstraints) ]
     let bVector = List.concat [ (List.replicate (List.length playerConstraints) 1.0); (List.map (fun (_, ub) -> ub) edgeConstraints) ]
+    System.IO.File.WriteAllText("f.json", JsonConvert.SerializeObject fVector)
     System.IO.File.WriteAllText("A.json", JsonConvert.SerializeObject aMatrix)
     System.IO.File.WriteAllText("b.json", JsonConvert.SerializeObject bVector)
+    let f = LinearAlgebra.Matrix.Build.DenseOfColumns ( Seq.singleton ( Seq.ofList fVector ) )
+    let a = LinearAlgebra.Matrix.Build.DenseOfRows (aMatrix |> Seq.map Seq.ofArray)
+    let b = LinearAlgebra.Matrix.Build.DenseOfColumns ( Seq.singleton ( Seq.ofList bVector ) )
+    let fPacked = MatlabWriter.Pack(f, "f")
+    let aPacked = MatlabWriter.Pack(a, "A")
+    let bPacked = MatlabWriter.Pack(b, "b")
+    let matrices = Seq.ofList [ fPacked; aPacked; bPacked ]
+    MatlabWriter.Store("lin_problem.mat", matrices)
     0 // return an integer exit code
