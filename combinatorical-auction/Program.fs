@@ -297,17 +297,20 @@ let calcEdgeConstraints bids =
 let main argv =
     printfn "Hello World from F#!"
     let routes = List.map (priceSingeRoute edgePrices) partialRoutes;
+    if not (System.IO.Directory.Exists "out") then
+        System.IO.Directory.CreateDirectory "out" |> ignore
+    System.IO.File.WriteAllText("out/routes.json", JsonConvert.SerializeObject(routes))
     let bids = calcBids demands routes
     let bidsView = List.map bid2viewModel bids
-    System.IO.File.WriteAllText("bids.json", JsonConvert.SerializeObject bidsView)
+    System.IO.File.WriteAllText("out/bids.json", JsonConvert.SerializeObject bidsView)
     let playerConstraints = calcPlayerConstraints bidsView
     let edgeConstraints = calcEdgeConstraints bids
     let fVector = List.map (fun x -> x.totalPrice) bidsView
     let aMatrix = List.concat [ playerConstraints; (List.map (fun (row, _) -> row) edgeConstraints) ]
     let bVector = List.concat [ (List.replicate (List.length playerConstraints) 1.0); (List.map (fun (_, ub) -> ub) edgeConstraints) ]
-    System.IO.File.WriteAllText("f.json", JsonConvert.SerializeObject fVector)
-    System.IO.File.WriteAllText("A.json", JsonConvert.SerializeObject aMatrix)
-    System.IO.File.WriteAllText("b.json", JsonConvert.SerializeObject bVector)
+    System.IO.File.WriteAllText("out/f.json", JsonConvert.SerializeObject fVector)
+    System.IO.File.WriteAllText("out/A.json", JsonConvert.SerializeObject aMatrix)
+    System.IO.File.WriteAllText("out/b.json", JsonConvert.SerializeObject bVector)
     let f = LinearAlgebra.Matrix.Build.DenseOfColumns ( Seq.singleton ( Seq.ofList fVector ) )
     let a = LinearAlgebra.Matrix.Build.DenseOfRows (aMatrix |> Seq.map Seq.ofArray)
     let b = LinearAlgebra.Matrix.Build.DenseOfColumns ( Seq.singleton ( Seq.ofList bVector ) )
@@ -315,5 +318,5 @@ let main argv =
     let aPacked = MatlabWriter.Pack(a, "A")
     let bPacked = MatlabWriter.Pack(b, "b")
     let matrices = Seq.ofList [ fPacked; aPacked; bPacked ]
-    MatlabWriter.Store("lin_problem.mat", matrices)
+    MatlabWriter.Store("out/lin_problem.mat", matrices)
     0 // return an integer exit code
