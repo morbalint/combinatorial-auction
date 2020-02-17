@@ -68,7 +68,7 @@ let demands = [
 ]
 
 // TODO: this should be calculated;
-let partialRoutes = [
+let routes = [
     { id = 1; player = players.[1]; edges = [ edges.[0], Negative ]; }
     { id = 2; player = players.[1]; edges = [ edges.[1], Negative; edges.[3], Positive ]; }
     { id = 3; player = players.[1]; edges = [ edges.[2], Negative; edges.[4], Positive ]; }

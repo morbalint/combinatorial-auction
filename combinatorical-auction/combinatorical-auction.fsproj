@@ -9,6 +9,9 @@
   <ItemGroup>
     <Compile Include="Models.fs" />
     <Compile Include="Data.fs" />
+    <Compile Include="Bidding.fs" />
+    <Compile Include="MatlabExport.fs" />
+    <Compile Include="CCA.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
