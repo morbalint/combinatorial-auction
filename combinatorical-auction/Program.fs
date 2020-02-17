@@ -217,5 +217,13 @@ let main argv =
     printfn "Hello World from F#!"
     let routes = List.map (priceSingeRoute edgePrices) partialRoutes;
     let bids = calcBids demands routes
+    printfn "Solving capacity allocation:"
     optanoGurobiSolution bids
+    printfn "Calculating payments for every player:"
+    bids
+    |> List.groupBy (fun (_,bid) -> bid.route.player.id)
+    |> List.map (fun (id,_) -> id)
+    |> List.map (fun playerId -> bids |> List.filter (fun (_,bid) -> bid.route.player.id <> playerId))
+    |> List.iter optanoGurobiSolution
+
     0 // return an integer exit code
