@@ -7,9 +7,9 @@ open OPTANO.Modeling.Optimization.Solver.Gurobi810
 
 let private addPlayerConstraints bids (model:Model) (variables:VariableCollection<Bid>) =
     bids
-    |> List.groupBy (fun (_,bid) -> bid.route.player.id)
+    |> List.groupBy (fun bid -> bid.route.player.id)
     |> List.iter (fun (playerId, playerBids) ->
-        let playerBidVariables = playerBids |> List.map (fun (_,bid) -> variables.[bid])
+        let playerBidVariables = playerBids |> List.map (fun bid -> variables.[bid])
         model.AddConstraint (
             Expression.op_LessThanOrEqual (
                 Expression.Sum ( playerBidVariables ), 1.0 ),
@@ -18,15 +18,13 @@ let private addPlayerConstraints bids (model:Model) (variables:VariableCollectio
 
 let private addEdgeConstraints bids (model:Model) (x:VariableCollection<Bid>) =
     bids
-    |> List.collect (fun (_,bid) -> bid.route.edges |> List.map (fun (edge,direction) -> (bid,edge,direction)) )
+    |> List.collect (fun bid -> bid.route.edges |> List.map (fun (edge,direction) -> (bid,edge,direction)) )
     |> List.groupBy (fun (_,edge,_) -> edge)
     |> List.iter (fun (edge, edgeBids) ->
         let edgeBidVariables =
             edgeBids
             |> List.map ( fun (bid,_,direction) ->
-                let quantity = match direction with
-                               | Direction.Negative -> -bid.quantity
-                               | Direction.Positive -> +bid.quantity
+                let quantity = (float direction) * bid.quantity
                 Variable.op_Multiply (x.[bid], quantity ) )
         model.AddConstraint (
             Expression.op_LessThanOrEqual (
@@ -41,15 +39,21 @@ let private addEdgeConstraints bids (model:Model) (x:VariableCollection<Bid>) =
     )
 
 let private addObjective bids (model:Model) (x:VariableCollection<Bid>) =
-    model.AddObjective (new Objective ( Expression.Sum( List.map (fun (_,bid:Bid) -> bid.totalPrice * x.[bid]) bids ), "weighted sum of bids" ,ObjectiveSense.Maximize ) )
+    model.AddObjective (new Objective ( Expression.Sum( List.map (fun bid -> bid.totalPrice * x.[bid]) bids ), "weighted sum of bids" ,ObjectiveSense.Maximize ) )
 
-let cca bids =
+let printResult (bids: List<float*Bid>) =
+    bids
+        |> List.filter (fun (accept,_) -> accept > 0.0)
+        |> List.iter (fun (accept,bid) -> printfn "bid of player %i was accepted at rate %f, assigned capacity: %f, routeId: %i" bid.route.player.id accept (accept * bid.quantity) bid.route.id)
+
+
+let cca (bids: Bid list) =
     // create model
     let model = new Model ()
     // create variable
     let x = new VariableCollection<Bid>(
                                                 model,
-                                                List.map (fun (_,bid) -> bid) bids,
+                                                bids,
                                                 "x",
                                                 (fun bid -> sprintf "Bid by player %i on route %i" bid.route.player.id bid.route.id),
                                                 (fun _ -> 0.0),
@@ -65,7 +69,4 @@ let cca bids =
         let solution = solver.Solve(model)
         x.SetVariableValues(solution.VariableValues))
 
-    // write output (TODO: separate)
-    bids
-        |> List.filter (fun (_,bid) -> x.[bid].Value > 0.0)
-        |> List.iter (fun (i,bid) -> printfn "bid %i, of player %i was accepted at rate %f, assigned capacity: %f, routeId: %i" i bid.route.player.id x.[bid].Value (x.[bid].Value * bid.quantity) bid.route.id)
+    bids |> List.map (fun bid -> (x.[bid].Value, bid))

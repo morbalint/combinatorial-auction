@@ -1,24 +1,25 @@
 ﻿module CombinatorialAuction.Bidding
 
 open CombinatorialAuction.Models
-open CombinatorialAuction.Data
+open CombinatorialAuction.DataSet1
 
 let private calcRouteCapacity (edges: (Edge * Direction) list) =
     edges
     |> List.map (fun (e,d) ->
         match d with
-        | Positive -> e.capacityPositive
-        | Negative -> e.capacityNegative)
+        | Direction.Positive -> e.capacityPositive
+        | Direction.Negative -> e.capacityNegative
+        | _ -> failwith "unknown direction enum value")
     |> List.min
 
-let private calcRoutePrice (edgePrices: EdgePrice list) (route: PartialRoute) =
+let private calcRoutePrice (edgePrices: TransferPrice list) (route: Route) =
     route.edges
-    |> List.sumBy (fun (e,d) ->
+    |> List.sumBy (fun (e,_) ->
         edgePrices
-        |> List.choose (fun p -> if p.player = route.player && p.edge = e then Some p.price else None)
+        |> List.choose (fun p -> if p.forPlayer = route.player && p.onEdge = e then Some p.price else None)
         |> List.head)
 
-let private priceSingeRoute (edgePrices: EdgePrice list) (route: PartialRoute) =
+let private priceSingeRoute (edgePrices: TransferPrice list) (route: Route) =
     {
         id = route.id;
         player = route.player;
@@ -30,8 +31,9 @@ let private priceSingeRoute (edgePrices: EdgePrice list) (route: PartialRoute) =
 let private getSourceNodeFromRoute route =
     let (firstEdge, firstDirection) = route.edges.[0];
     match firstDirection with
-    | Positive -> firstEdge.fromNode
-    | Negative -> firstEdge.toNode
+    | Direction.Positive -> firstEdge.fromNode
+    | Direction.Negative -> firstEdge.toNode
+    | _ -> failwith "unknown direction enum value"
 
 let calcSourcePriceFromPricesAndRoute prices route =
     let sourceNode = getSourceNodeFromRoute route
@@ -71,19 +73,9 @@ let bidsFromPricedRoutes (demands: Demand list) routes =
     |> List.collect (calcBidsForSingleRoute demands)
     |> List.sortBy (fun bid -> bid.quantity)
     |> List.sortBy (fun bid -> bid.route.player.id)
-    |> List.indexed
 
 /// TODO: remove data dependency
 let getPricedRoutes () = List.map (priceSingeRoute edgePrices) routes;
 
 /// TODO: remove data dependency
 let getBids () = bidsFromPricedRoutes demands (getPricedRoutes ())
-
-let bid2viewModel (idx,bid) =
-    {
-        id = idx;
-        routeId = bid.route.id;
-        playerId = bid.route.player.id;
-        quantity = bid.quantity;
-        totalPrice = bid.totalPrice;
-    }

@@ -10,12 +10,14 @@ let main argv =
     printfn "Hello World from F#!"
     let bids = getBids ()
     printfn "Solving capacity allocation:"
-    cca bids
+    bids |> cca |> printResult
     printfn "Calculating payments for every player:"
     bids
-    |> List.groupBy (fun (_,bid) -> bid.route.player.id)
-    |> List.map (fun (id,_) -> id)
-    |> List.map (fun playerId -> bids |> List.filter (fun (_,bid) -> bid.route.player.id <> playerId))
-    |> List.iter cca
+    |> List.groupBy (fun bid -> bid.route.player.id)
+    |> List.map (fun (id,_) -> 
+        bids 
+        |> List.filter (fun bid -> bid.route.player.id <> id) 
+        |> cca)
+    |> List.iter printResult
 
     0 // return an integer exit code

@@ -1,4 +1,4 @@
-﻿module CombinatorialAuction.Data
+﻿module CombinatorialAuction.DataSet1
 
 open CombinatorialAuction.Models
 
@@ -29,24 +29,24 @@ let sources = players |> List.map (fun p -> p.node.production > 0.0)
 let consumers = players |> List.map (fun p -> p.node.production < 0.0)
 
 let edgePrices = [
-    { player = players.[1]; edge = edges.[0]; price = 9.0; }
-    { player = players.[2]; edge = edges.[0]; price = 9.0; }
-    { player = players.[3]; edge = edges.[0]; price = 4.0; }
-    { player = players.[1]; edge = edges.[1]; price = 5.0; }
-    { player = players.[2]; edge = edges.[1]; price = 8.0; }
-    { player = players.[3]; edge = edges.[1]; price = 8.0; }
-    { player = players.[1]; edge = edges.[2]; price = 11.0; }
-    { player = players.[2]; edge = edges.[2]; price = 11.0; }
-    { player = players.[3]; edge = edges.[2]; price = 11.0; }
-    { player = players.[1]; edge = edges.[3]; price = 1.0; }
-    { player = players.[2]; edge = edges.[3]; price = 4.0; }
-    { player = players.[3]; edge = edges.[3]; price = 4.0; }
-    { player = players.[1]; edge = edges.[4]; price = 4.5; }
-    { player = players.[2]; edge = edges.[4]; price = 4.5; }
-    { player = players.[3]; edge = edges.[4]; price = 1.5; }
-    { player = players.[1]; edge = edges.[5]; price = 5.0; }
-    { player = players.[2]; edge = edges.[5]; price = 1.5; }
-    { player = players.[3]; edge = edges.[5]; price = 5.0; }
+    { forPlayer = players.[1]; onEdge = edges.[0]; price = 9.0; }
+    { forPlayer = players.[2]; onEdge = edges.[0]; price = 9.0; }
+    { forPlayer = players.[3]; onEdge = edges.[0]; price = 4.0; }
+    { forPlayer = players.[1]; onEdge = edges.[1]; price = 5.0; }
+    { forPlayer = players.[2]; onEdge = edges.[1]; price = 8.0; }
+    { forPlayer = players.[3]; onEdge = edges.[1]; price = 8.0; }
+    { forPlayer = players.[1]; onEdge = edges.[2]; price = 11.0; }
+    { forPlayer = players.[2]; onEdge = edges.[2]; price = 11.0; }
+    { forPlayer = players.[3]; onEdge = edges.[2]; price = 11.0; }
+    { forPlayer = players.[1]; onEdge = edges.[3]; price = 1.0; }
+    { forPlayer = players.[2]; onEdge = edges.[3]; price = 4.0; }
+    { forPlayer = players.[3]; onEdge = edges.[3]; price = 4.0; }
+    { forPlayer = players.[1]; onEdge = edges.[4]; price = 4.5; }
+    { forPlayer = players.[2]; onEdge = edges.[4]; price = 4.5; }
+    { forPlayer = players.[3]; onEdge = edges.[4]; price = 1.5; }
+    { forPlayer = players.[1]; onEdge = edges.[5]; price = 5.0; }
+    { forPlayer = players.[2]; onEdge = edges.[5]; price = 1.5; }
+    { forPlayer = players.[3]; onEdge = edges.[5]; price = 5.0; }
 ]
 
 let prices = [
@@ -69,17 +69,17 @@ let demands = [
 
 // TODO: this should be calculated;
 let routes = [
-    { id = 1; player = players.[1]; edges = [ edges.[0], Negative ]; }
-    { id = 2; player = players.[1]; edges = [ edges.[1], Negative; edges.[3], Positive ]; }
-    { id = 3; player = players.[1]; edges = [ edges.[2], Negative; edges.[4], Positive ]; }
-    { id = 4; player = players.[1]; edges = [ edges.[1], Negative; edges.[5], Negative; edges.[4], Positive ]; }
-    { id = 5; player = players.[1]; edges = [ edges.[2], Negative; edges.[5], Positive; edges.[3], Positive ]; }
-    { id = 1; player = players.[2]; edges = [ edges.[1], Negative ]; }
-    { id = 2; player = players.[2]; edges = [ edges.[0], Negative; edges.[3], Negative ]; }
-    { id = 4; player = players.[2]; edges = [ edges.[2], Negative; edges.[5], Positive ]; }
-    { id = 3; player = players.[2]; edges = [ edges.[2], Negative; edges.[4], Positive; edges.[3], Negative ]; }
-    { id = 1; player = players.[3]; edges = [ edges.[2], Negative ]; }
-    { id = 2; player = players.[3]; edges = [ edges.[0], Negative; edges.[4], Negative ]; }
-    { id = 3; player = players.[3]; edges = [ edges.[1], Negative; edges.[5], Negative ]; }
-    { id = 4; player = players.[3]; edges = [ edges.[1], Negative; edges.[3], Positive; edges.[4], Negative ]; }
+    { id = 1; player = players.[1]; edges = [ edges.[0], Direction.Negative ]; }
+    { id = 2; player = players.[1]; edges = [ edges.[1], Direction.Negative; edges.[3], Direction.Positive ]; }
+    { id = 3; player = players.[1]; edges = [ edges.[2], Direction.Negative; edges.[4], Direction.Positive ]; }
+    { id = 4; player = players.[1]; edges = [ edges.[1], Direction.Negative; edges.[5], Direction.Negative; edges.[4], Direction.Positive ]; }
+    { id = 5; player = players.[1]; edges = [ edges.[2], Direction.Negative; edges.[5], Direction.Positive; edges.[3], Direction.Positive ]; }
+    { id = 1; player = players.[2]; edges = [ edges.[1], Direction.Negative ]; }
+    { id = 2; player = players.[2]; edges = [ edges.[0], Direction.Negative; edges.[3], Direction.Negative ]; }
+    { id = 4; player = players.[2]; edges = [ edges.[2], Direction.Negative; edges.[5], Direction.Positive ]; }
+    { id = 3; player = players.[2]; edges = [ edges.[2], Direction.Negative; edges.[4], Direction.Positive; edges.[3], Direction.Negative ]; }
+    { id = 1; player = players.[3]; edges = [ edges.[2], Direction.Negative ]; }
+    { id = 2; player = players.[3]; edges = [ edges.[0], Direction.Negative; edges.[4], Direction.Negative ]; }
+    { id = 3; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[5], Direction.Negative ]; }
+    { id = 4; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[3], Direction.Positive; edges.[4], Direction.Negative ]; }
 ]

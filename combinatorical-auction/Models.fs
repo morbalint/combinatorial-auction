@@ -18,18 +18,6 @@ type Player = {
     node: Node;
 }
 
-type TransferCost = {
-    onEdge: Edge;
-    forPlayer: Player;
-    price: float;
-}
-
-type SourcePrices = {
-    fromProducer: Node;
-    toConsumer: Player;
-    price: float;
-}
-
 // piece of constant inverse demand curve
 type Demand = {
     player: Player;
@@ -38,31 +26,37 @@ type Demand = {
     price: float;
 }
 
-type EdgePrice = {
-    player: Player;
-    edge: Edge;
+type SourcePrice = {
+    fromProducer: Node;
+    toConsumer: Player;
     price: float;
 }
 
-type Direction =
-    | Positive
-    | Negative
-
-type Transport = {
-    player: Player;
+type TransferPrice = {
+    forPlayer: Player;
     onEdge: Edge;
-    Price: float;
-    amount: float;
-    direction: Direction;
+    price: float;
 }
 
-type PartialRoute = {
+type Direction = Positive = 1 | Negative = -1
+
+type Route = {
     id: int;
     player: Player;
     edges: (Edge * Direction) list;
 }
 
-type Route = {
+type DataSet = {
+    nodes: Node list
+    edges: Edge list
+    players: Player list
+    demands: Demand list
+    sourcePrices: SourcePrice list
+    transferPrices: TransferPrice list
+    Routes: Route list
+}
+
+type TransportRoute = {
     id: int;
     player: Player;
     edges: (Edge * Direction) list;
@@ -71,20 +65,7 @@ type Route = {
 }
 
 type Bid = {
-    route: Route;
+    route: TransportRoute;
     quantity: float;
     totalPrice: float;
-}
-
-type BidViewModel = {
-    id: int;
-    routeId: int;
-    playerId: int;
-    quantity: float;
-    totalPrice: float;
-}
-
-type ConstraintRow = {
-    weights: float list;
-    upperBound: float;
 }
