@@ -69,3 +69,8 @@ type Bid = {
     quantity: float;
     totalPrice: float;
 }
+
+type BidResult = {
+    bid: Bid
+    acceptance: float
+    payment: float }

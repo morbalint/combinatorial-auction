@@ -4,11 +4,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>combinatorical_auction</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="Models.fs" />
-    <Compile Include="Data.fs" />
+    <Compile Include="DataSet1.fs" />
+    <Compile Include="DataSet2.fs" />
     <Compile Include="Bidding.fs" />
     <Compile Include="CCA.fs" />
     <Compile Include="VCG.fs" />

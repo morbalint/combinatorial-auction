@@ -1,7 +1,7 @@
 ﻿module CombinatorialAuction.Bidding
 
 open CombinatorialAuction.Models
-open CombinatorialAuction.DataSet1
+open CombinatorialAuction.DataSet2
 
 let private calcRouteCapacity (edges: (Edge * Direction) list) =
     edges
