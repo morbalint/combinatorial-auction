@@ -41,12 +41,6 @@ let private addEdgeConstraints bids (model:Model) (x:VariableCollection<Bid>) =
 let private addObjective bids (model:Model) (x:VariableCollection<Bid>) =
     model.AddObjective (new Objective ( Expression.Sum( List.map (fun bid -> bid.totalPrice * x.[bid]) bids ), "weighted sum of bids" ,ObjectiveSense.Maximize ) )
 
-let printResult (bids: List<float*Bid>) =
-    bids
-        |> List.filter (fun (accept,_) -> accept > 0.0)
-        |> List.iter (fun (accept,bid) -> printfn "bid of player %i was accepted at rate %f, assigned capacity: %f, routeId: %i" bid.route.player.id accept (accept * bid.quantity) bid.route.id)
-
-
 let cca (bids: Bid list) =
     // create model
     let model = new Model ()
