@@ -11,16 +11,16 @@ let directedEdgePrinter (edge, direction) =
     match direction with
     | Direction.Positive -> edge.toNode.id
     | Direction.Negative -> edge.fromNode.id
-    | _ -> failwith "unkown direction"
+    | _ -> failwith "unknown direction"
     |> string
 
 let routePrinter arrow (route: List<(Edge * Direction)>) =
     let (firstEdge, firstDirection) = route.Head
-    let primer = 
+    let primer =
         match firstDirection with
         | Direction.Positive -> firstEdge.fromNode.id
         | Direction.Negative -> firstEdge.toNode.id
-        | _ -> failwith "unkown direction"
+        | _ -> failwith "unknown direction"
         |> string
     List.fold (fun state (directedEdge) -> state + arrow + (directedEdgePrinter directedEdge) ) primer route
 
@@ -56,7 +56,7 @@ let printCcaResult (bids: List<float*Bid>) =
 let main argv =
     printfn "Hello World from F#!"
 
-    //routes 
+    //routes
     //|> List.map (fun x -> x.edges)
     //|> List.map (routePrinter " -> ")
     //|> List.iter Console.WriteLine
@@ -76,11 +76,9 @@ let main argv =
     bids |> cca |> printCcaResult |> Seq.iter Console.WriteLine
     printfn "Calculating payments for every player:"
 
-    bids 
+    bids
     |> VCG.vcg
-    |> List.iter (fun (player, payment) -> 
+    |> List.iter (fun (player, payment) ->
         printfn "Player %i, will pay: %f" player.id payment )
-    
-    
 
     0 // return an integer exit code
