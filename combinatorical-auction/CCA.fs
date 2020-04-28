@@ -4,6 +4,7 @@ open CombinatorialAuction.Models
 open OPTANO.Modeling.Optimization
 open OPTANO.Modeling.Optimization.Enums
 open OPTANO.Modeling.Optimization.Solver.Gurobi810
+open OPTANO.Modeling.Optimization.Solver.Z3
 
 let private addPlayerConstraints bids (model:Model) (variables:VariableCollection<Bid>) =
     bids
@@ -39,7 +40,7 @@ let private addEdgeConstraints bids (model:Model) (x:VariableCollection<Bid>) =
     )
 
 let private addObjective bids (model:Model) (x:VariableCollection<Bid>) =
-    model.AddObjective (new Objective ( Expression.Sum( List.map (fun bid -> bid.totalPrice * x.[bid]) bids ), "weighted sum of bids" ,ObjectiveSense.Maximize ) )
+    model.AddObjective (new Objective ( Expression.Sum( List.map (fun (bid: Bid) -> Variable.op_Multiply(x.[bid] , bid.totalPrice)) bids ), "weighted sum of bids" ,ObjectiveSense.Maximize ) )
 
 let cca (bids: Bid list) =
     // create model
@@ -59,7 +60,8 @@ let cca (bids: Bid list) =
     addObjective bids model x
 
     // solve
-    using (new GurobiSolver ()) (fun solver ->
+    using (new Z3Solver ()) (fun solver ->
+        solver.Configuration.LogFile <- new System.IO.FileInfo "z3.log"
         let solution = solver.Solve(model)
         x.SetVariableValues(solution.VariableValues))
 
