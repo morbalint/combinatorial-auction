@@ -25,8 +25,8 @@ let players = [
     { id = 3; node = nodes.[3] };
 ]
 
-let sources = players |> List.map (fun p -> p.node.production > 0.0)
-let consumers = players |> List.map (fun p -> p.node.production < 0.0)
+let sources = players |> List.map isSource
+let consumers = players |> List.map isConsumer
 
 let edgePrices = [
     { forPlayer = players.[1]; onEdge = edges.[0]; price = 9.0; }
@@ -83,3 +83,13 @@ let routes = [
     { id = 3; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[5], Direction.Negative ]; }
     { id = 4; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[3], Direction.Positive; edges.[4], Direction.Negative ]; }
 ]
+
+let dataset : DataSet = { 
+    nodes = nodes;
+    edges = edges;
+    players = players;
+    demands = demands;
+    sourcePrices = prices;
+    transferPrices = edgePrices;
+    routes = routes;
+}

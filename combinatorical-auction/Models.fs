@@ -53,7 +53,7 @@ type DataSet = {
     demands: Demand list
     sourcePrices: SourcePrice list
     transferPrices: TransferPrice list
-    Routes: Route list
+    routes: Route list
 }
 
 type TransportRoute = {
@@ -61,7 +61,7 @@ type TransportRoute = {
     player: Player;
     edges: (Edge * Direction) list;
     capacity: float;
-    price: float;
+    unitPrice: float;
 }
 
 type Bid = {
@@ -74,3 +74,6 @@ type BidResult = {
     bid: Bid
     acceptance: float
     payment: float }
+
+let isSource = fun p -> p.node.production > 0.0
+let isConsumer = fun p -> p.node.production < 0.0

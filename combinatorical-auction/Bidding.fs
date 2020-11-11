@@ -19,13 +19,28 @@ let private calcRoutePrice (edgePrices: TransferPrice list) (route: Route) =
         |> List.choose (fun p -> if p.forPlayer = route.player && p.onEdge = e then Some p.price else None)
         |> List.head)
 
-let private priceSingeRoute (edgePrices: TransferPrice list) (route: Route) =
+let private selectSourcePrice (sourcePrices: SourcePrice list) (player: Player) = 
+    sourcePrices 
+    |> Seq.filter ( fun sp -> sp.toConsumer = player )
+    |> Seq.map (fun sp -> sp.price)
+    |> Seq.head
+
+let public priceSingeRoute (edgePrices: TransferPrice list) (route: Route) =
     {
         id = route.id;
         player = route.player;
         edges = route.edges;
         capacity = calcRouteCapacity route.edges
-        price = calcRoutePrice edgePrices route
+        unitPrice = calcRoutePrice edgePrices route
+    }
+
+let public priceSingleRouteWithSource (edgePrices: TransferPrice list) (sourcePrices: SourcePrice list) (route: Route) =
+    {
+        id = route.id;
+        player = route.player;
+        edges = route.edges;
+        capacity = calcRouteCapacity route.edges
+        unitPrice = (calcRoutePrice edgePrices route) + (selectSourcePrice sourcePrices route.player)
     }
 
 let private getSourceNodeFromRoute route =
@@ -59,11 +74,11 @@ let calcBidsForSingleRoute (demands: Demand list) route =
             {
                 route = route;
                 quantity = d.toAmount;
-                totalPrice = (d.toAmount - d.fromAmount) * ( d.price - route.price - sourcePrice );
+                totalPrice = (d.toAmount - d.fromAmount) * ( d.price - route.unitPrice - sourcePrice );
             })
     let (bids : Bid list, _) =
         List.mapFold
-            (fun state piece -> ( { piece with totalPrice = piece.totalPrice + state } , (state + piece.totalPrice) ) )
+            (fun state piece -> ( { piece with totalPrice = piece.totalPrice + state } , (piece.totalPrice + state) ) )
             0.0
             bidPieces
     bids |> List.filter (fun bid -> bid.totalPrice > 0.0)

@@ -83,3 +83,13 @@ let routes = [
     { id = 3; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[5], Direction.Negative ]; }
     { id = 4; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[3], Direction.Positive; edges.[4], Direction.Negative ]; }
 ]
+
+let dataset : DataSet = { 
+    nodes = nodes;
+    edges = edges;
+    players = players;
+    demands = demands;
+    sourcePrices = prices;
+    transferPrices = edgePrices;
+    routes = routes;
+}

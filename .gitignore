@@ -17,3 +17,6 @@ text/
 out/
 *.dll
 bin/
+.vscode/
+
+.fake
