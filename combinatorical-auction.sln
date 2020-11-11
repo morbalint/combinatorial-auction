@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "combinatorical-auction", "combinatorical-auction\combinatorical-auction.fsproj", "{E081D728-EB13-4924-8CA2-219DE88C265C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceAllocationAuction", "ResourceAllocationAuction\ResourceAllocationAuction.csproj", "{3BE01C8C-C543-410E-826D-9077489A820F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{E081D728-EB13-4924-8CA2-219DE88C265C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E081D728-EB13-4924-8CA2-219DE88C265C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E081D728-EB13-4924-8CA2-219DE88C265C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BE01C8C-C543-410E-826D-9077489A820F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE01C8C-C543-410E-826D-9077489A820F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE01C8C-C543-410E-826D-9077489A820F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE01C8C-C543-410E-826D-9077489A820F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
