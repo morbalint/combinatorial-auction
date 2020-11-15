@@ -3,7 +3,6 @@
 open CombinatorialAuction.Models
 open OPTANO.Modeling.Optimization
 open OPTANO.Modeling.Optimization.Enums
-open OPTANO.Modeling.Optimization.Solver.Gurobi810
 open OPTANO.Modeling.Optimization.Solver.Z3
 
 let private addPlayerConstraints bids (model:Model) (variables:VariableCollection<Bid>) =
