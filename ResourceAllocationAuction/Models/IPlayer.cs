@@ -1,8 +1,11 @@
-﻿namespace ResourceAllocationAuction.Models
+﻿using System;
+
+namespace ResourceAllocationAuction.Models
 {
-    public interface IPlayer
+    public interface IPlayer : IEquatable<IPlayer>
     {
         INode Home { get; }
+
         int Id { get; }
     }
 }

@@ -1,15 +1,11 @@
 ﻿namespace ResourceAllocationAuction.Models
 {
-    public class Player : IPlayer
+    public record Player(int Id, INode Home) : IPlayer
     {
-        public Player(int id, INode home)
-        {
-            this.Id = id;
-            this.Home = home;
-        }
+        public bool Equals(IPlayer? other) => Equals((object?)other);
 
-        public int Id { get; }
+        public override int GetHashCode() => Id;
 
-        public INode Home { get; }
+        public override string ToString() => $"Player_{Id}";
     }
 }

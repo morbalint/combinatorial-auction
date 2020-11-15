@@ -1,15 +1,30 @@
 ﻿namespace ResourceAllocationAuction.Models
 {
-    public class DirectedEdge
+    public record DirectedEdge(IEdge Edge, Direction Direction) : IDirectedEdge
     {
-        public DirectedEdge(Edge edge, Direction direction)
+        public double Capacity => Direction switch
         {
-            this.Edge = edge;
-            this.Direction = direction;
-        }
+            Direction.Positive => Edge.Capacity.Positive,
+            Direction.Negative => Edge.Capacity.Negative,
+            _ => throw EnumException,
+        };
 
-        public Edge Edge { get; }
+        public double SignedCapacity => Direction switch
+        {
+            Direction.Positive => Edge.Capacity.Positive,
+            Direction.Negative => -Edge.Capacity.Negative,
+            _ => throw EnumException,
+        };
 
-        public Direction Direction { get; }
+        public override string ToString() => Direction switch
+        {
+            Direction.Positive => $"{Edge.From.Id} => {Edge.To.Id}",
+            Direction.Negative => $"{Edge.To.Id} => {Edge.From.Id}",
+            _ => throw EnumException,
+        };
+
+        public bool Equals(IDirectedEdge? other) => other is IDirectedEdge && Equals((object)this);
+
+        private NotSupportedEnumValueException<Direction> EnumException => new NotSupportedEnumValueException<Direction>(Direction);
     }
 }

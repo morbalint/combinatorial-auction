@@ -2,9 +2,9 @@
 {
     public interface IDemand
     {
-        double FromAmount { get; set; }
+        double FromAmount { get; }
         IPlayer Player { get; }
-        double Price { get; set; }
-        double ToAmount { get; set; }
+        double Price { get; }
+        double ToAmount { get; }
     }
 }

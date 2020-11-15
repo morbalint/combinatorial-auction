@@ -1,23 +1,18 @@
-﻿namespace ResourceAllocationAuction.Models
+﻿using System;
+
+namespace ResourceAllocationAuction.Models
 {
-
-
-    public class Edge : IEdge
+    public record Capacity(double Positive, double Negative)
     {
-        public Edge(int id, INode from, INode to, Capacity capacity)
-        {
-            this.Id = id;
-            this.From = from;
-            this.To = to;
-            this.Capacity = capacity;
-        }
+        public static Capacity create(double symetric) => new Capacity(symetric, symetric);
+    };
 
-        public int Id { get; }
+    public record Edge(INode From, INode To, Capacity Capacity) : IEdge
+    {
+        public bool Equals(IEdge? other) => Equals((object?)other);
 
-        public INode From { get; }
+        public override int GetHashCode() => HashCode.Combine(this.From, this.To);
 
-        public INode To { get; }
-
-        public Capacity Capacity { get; }
+        public override string ToString() => $"Edge from {From.Id} => to {To.Id}";
     }
 }
