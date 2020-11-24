@@ -15,7 +15,5 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: 'combinatorial-auction.test/combinatorial-auction.test.fsproj'
+- script: dotnet test 'combinatorial-auction.test/combinatorial-auction.test.fsproj'
+  displayName: 'dotnet test F#'
