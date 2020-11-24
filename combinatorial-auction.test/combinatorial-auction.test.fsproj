@@ -15,6 +15,7 @@
   <ItemGroup>
   
     <Compile Include="ACA\closed_edges.tests.fs" />
+    <Compile Include="ACA\update_demands.tests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
