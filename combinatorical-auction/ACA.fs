@@ -1,6 +1,7 @@
 ﻿module CombinatorialAuction.ACA
 
 open CombinatorialAuction.Models
+
 open CombinatorialAuction.DataSet2
 open CombinatorialAuction.Bidding
 
@@ -92,31 +93,11 @@ let close_edges_on_route decrement (route: TransportRoute) =
     { route with unitPrice = route.unitPrice - decrement }
 
 // updates demand of a single player
-let rec update_demands_old decrement (demands : Demand list) =
-    match demands with
-    | act::next::tail ->
-        let act_amount = act.toAmount - act.fromAmount
-        let surplus = act_amount * (act.price - next.price)
-        if surplus >= decrement
-        then
-            let updated_price = next.price + ((surplus - decrement) / act_amount)
-            { act with price = updated_price } :: next :: tail
-        else
-            let unified = { next with fromAmount = act.fromAmount }
-            update_demands_old (decrement - surplus) ( unified :: tail )
-    | last::[] ->
-        let amount = last.toAmount - last.fromAmount
-        let updated_price = (amount * last.price - decrement) / amount
-        assert (updated_price >= 0.)
-        [{last with price = updated_price}]
-    | [] -> demands
-
-// updates demand of a single player
-let rec update_demands decrement (demands : Demand list) =
+let rec update_demands decrement demands =
     match demands with
     | act::tail ->
         let currentArea = (act.toAmount - act.fromAmount) * act.price
-        if currentArea < decrement then
+        if currentArea <= decrement then
             update_demands (decrement - currentArea) tail
         else
             let dividePoint = act.fromAmount + (decrement / act.price)

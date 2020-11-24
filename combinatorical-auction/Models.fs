@@ -1,7 +1,6 @@
 ﻿module CombinatorialAuction.Models
 
 type Node = {
-    production: float;
     id: int
 }
 
@@ -73,7 +72,5 @@ type Bid = {
 type BidResult = {
     bid: Bid
     acceptance: float
-    payment: float }
-
-let isSource = fun p -> p.node.production > 0.0
-let isConsumer = fun p -> p.node.production < 0.0
+    payment: float
+}
