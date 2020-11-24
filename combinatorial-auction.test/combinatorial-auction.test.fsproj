@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -13,7 +13,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Tests.fs" />
+  
+    <Compile Include="ACA\closed_edges.tests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
