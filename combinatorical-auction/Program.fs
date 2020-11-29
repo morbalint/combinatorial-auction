@@ -126,8 +126,9 @@ let printer title data =
     data |> Seq.iter ( printfn "%A" )
     printfn "=================="
 
-let runACA2 () =
-    let bids_0 = ACA.make_bids DataSet2.demands ACA.reference_priced_routes
+let ACAtester () =
+    let transport_routes = List.map (priceSingleRouteWithSource edgePrices prices) routes
+    let bids_0 = ACA.make_bids DataSet2.demands transport_routes
     let demands_0 = DataSet2.demands
 
     let increment_per_step = 1.
@@ -135,9 +136,10 @@ let runACA2 () =
 
     let mutable i = 0;
 
-    let rec loop already_closed_edges total_increment (demands: Demand seq) bids =
+    let rec loop already_closed_edges total_increment bids previous_results =
         printfn "Step %i:" i
-        printer "Bids" bids
+        // printer "Bids" bids
+
         let closed_edges_next =
             closed_edges bids
             |> set
@@ -151,35 +153,37 @@ let runACA2 () =
             newly_closed_edges
             |> Seq.map (assign_price_to_closed_edge DataSet2.edgePrices total_increment)
             |> Seq.toArray
-        let decrements_per_route =
+
+        let partial_results = 
+            bids 
+            |> Seq.collect (fun bid -> 
+                bid.edges 
+                |> Seq.map fst
+                |> set
+                |> Set.intersect newly_closed_edges
+                |> Seq.map (fun e -> { 
+                    player = bid.player; 
+                    edge = e; 
+                    capacity = bid.capacity; 
+                    unitPrice = bid.unitPrice }))
+
+        let qq = 
+            partial_results
+            |> Seq.map (fun r -> { r with unitPrice = total_increment })
+        printer "Results with increment instead of unit price" qq
+
+        let results = Seq.append previous_results partial_results
+
+        let routes_next =
             bids
             |> Seq.map ( decrement_on_route priced_closed_edges )
             |> Seq.zip bids
-            |> Seq.toArray
-
-        let routes_next =
-            decrements_per_route
-            |> Seq.map (fun (r,dec) -> close_edges_on_route dec r)
-            |> Seq.map (my_increment_price_function closed_edges_next )
+            |> Seq.map (
+                (fun (r,dec) -> close_edges_on_route dec r) >> 
+                (my_increment_price_function closed_edges_next ))
             |> Seq.toList
 
-        let player_payments =
-            decrements_per_route
-            |> Seq.map (fun (r,d) -> r,d*r.capacity)
-            |> Seq.groupBy (fun (r,_) -> r.player)
-            |> Seq.map ( fun (p, prs) -> p,(prs |> Seq.sumBy snd))
-            |> Seq.toArray
-
-        let demands_next =
-            demands
-            |> Seq.groupBy ( fun d -> d.player )
-            |> Seq.allPairs player_payments
-            |> Seq.filter ( fun ((p1,_),(p2,_)) -> p1 = p2)
-            |> Seq.map ( fun ((_,decrement),(_,dems)) -> ACA.update_demands decrement (dems |> Seq.toList) )
-            |> Seq.collect (fun x -> x)
-            |> Seq.toArray
-
-        let bids_next = ACA.make_bids demands_next routes_next
+        let bids_next = ACA.make_bids demands_0 routes_next
 
         // is it done?
         let edges =
@@ -191,12 +195,49 @@ let runACA2 () =
 
         if not (Set.isEmpty open_edges) && i < 100 then
             i <- i + 1
-            loop closed_edges_next (total_increment + increment_per_step) demands_next bids_next
+            loop closed_edges_next (total_increment + increment_per_step) bids_next results
         else
-            routes_next, demands_next, bids_next
+            results, bids_next
 
-    let (ipr_final, demands_final, bids_final) = loop Set.empty 0. demands_0 bids_0
-    bids_final
+    let (results, bids) = loop Set.empty 0. bids_0 []
+
+    printer "All bids" bids
+    let bids_of_player1 = 
+        bids 
+        |> Seq.filter ( fun bid -> bid.player.id = 1 ) 
+        |> Seq.map ( fun b -> ((routePrinter "->" b.edges), b.unitPrice, b.capacity))
+    printer "Bids of player 1" bids_of_player1
+    printer "All results" results
+    results
+        |> Seq.groupBy (fun r -> r.player)
+        |> Seq.iter (fun (p,q) -> 
+            let res = q |> Seq.map (fun r -> (r.edge,r.capacity, r.unitPrice))
+            printer (sprintf "Results of player %i" p.id) res
+        )
+    results
+        |> Seq.groupBy (fun r -> r.edge)
+        |> Seq.sortBy fst
+        |> Seq.iter (fun (e,q) -> 
+            let res = q |> Seq.map (fun r -> (r.player.id, r.capacity, r.unitPrice))
+            printer (sprintf "Results on edge %i" e.id) res)
+
+let runACA () =
+    let transport_routes = List.map (priceSingleRouteWithSource edgePrices prices) routes
+    let results = ACA.runACA demands transport_routes edgePrices 1.
+    results
+        |> Seq.groupBy (fun r -> r.player)
+        |> Seq.iter (fun (p,q) -> 
+            let res = q |> Seq.map (fun r -> (r.edge,r.capacity, r.unitPrice))
+            printer (sprintf "Results of player %i" p.id) res
+        )
+    results
+        |> Seq.groupBy (fun r -> r.edge)
+        |> Seq.sortBy fst
+        |> Seq.iter (fun (e,q) -> 
+            let basePrice = ((edgePrices |> Seq.find (fun t -> t.onEdge = e)).price) + DataSet2.prices.Head.price
+            let res = q |> Seq.map (fun r -> (r.player.id, r.capacity, r.unitPrice - basePrice))
+            printer (sprintf "Results on edge %i" e.id) res)
+
 
 [<EntryPoint>]
 let main argv =
@@ -204,8 +245,8 @@ let main argv =
 
     let clock = System.Diagnostics.Stopwatch.StartNew()
 
-    let bids = runACA2 ()
-    printer "Final bids" (bids |> Seq.filter ( fun bid -> bid.player.id = 1 ))
+    runACA ()
+
 
     // let bids = getBids ()
     //let vcgRes = bids |> VCG.detailedVcg
