@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>combinatorical_auction</RootNamespace>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
