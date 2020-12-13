@@ -3,8 +3,8 @@
 open CombinatorialAuction.Models
 
 let nodes = [
-    { id = 1; production = 1000. }
-    { id = 2; production = -100. }
+    { id = 1; }
+    { id = 2; }
 ]
 
 let edges = [
@@ -12,13 +12,9 @@ let edges = [
 ]
 
 let players = [
-    { id = 0; node = nodes.[0] }
     { id = 1; node = nodes.[1] }
     { id = 2; node = nodes.[1] }
 ]
-
-let sources = players |> List.map isSource
-let consumers = players |> List.map isConsumer
 
 let edgePrices = [
     { forPlayer = players.[1]; onEdge = edges.[0]; price = 8.0; }
@@ -45,7 +41,7 @@ let routes = [
     { id = 1; player = players.[2]; edges = [ edges.[0], Direction.Negative ]; }
 ]
 
-let dataset : DataSet = { 
+let dataset : DataSet = {
     nodes = nodes;
     edges = edges;
     players = players;
