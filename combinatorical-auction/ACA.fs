@@ -10,16 +10,16 @@ type ResultSegment = {
 }
 
 let rec bid (demands: Demand list) (route: TransportRoute) =
-    if demands.Head.price < route.unitPrice then
-        { route with capacity = 0. }, demands
-    else
-        let current_demand_capacity = demands.Head.toAmount - demands.Head.fromAmount
+    match demands with
+    | demand::tail when demand.price > route.unitPrice ->
+        let current_demand_capacity = demand.toAmount - demand.fromAmount
         let spill = route.capacity - current_demand_capacity
         if (spill <= 0.) then
-            route, { demands.Head with fromAmount = demands.Head.fromAmount + route.capacity } :: demands.Tail
+            route, { demand with fromAmount = demand.fromAmount + route.capacity } :: tail
         else
-            let bid2,dem2 = bid demands.Tail { route with capacity = spill }
+            let bid2,dem2 = bid tail { route with capacity = spill }
             {bid2 with capacity = (bid2.capacity + current_demand_capacity)}, dem2
+    | _ -> { route with capacity = 0. }, demands
 
 let make_all_bids_for_a_player (demands: Demand list, routes: TransportRoute seq) =
     let test =
@@ -117,7 +117,7 @@ let runACA demands routes edge_prices increment_per_step =
 
         let newly_closed_edges = closed_edges_next - already_closed_edges
 
-        // previous bids are the new routes! 
+        // previous bids are the new routes!
         // close off everything you didn't bid in the previous step
 
         let priced_closed_edges =
@@ -125,17 +125,17 @@ let runACA demands routes edge_prices increment_per_step =
             |> Seq.map (assign_price_to_closed_edge edge_prices total_increment)
             |> Seq.toArray
 
-        let partial_results = 
-            bids 
-            |> Seq.collect (fun bid -> 
-                bid.edges 
+        let partial_results =
+            bids
+            |> Seq.collect (fun bid ->
+                bid.edges
                 |> Seq.map fst
                 |> set
                 |> Set.intersect newly_closed_edges
-                |> Seq.map (fun e -> { 
-                    player = bid.player; 
-                    edge = e; 
-                    capacity = bid.capacity; 
+                |> Seq.map (fun e -> {
+                    player = bid.player;
+                    edge = e;
+                    capacity = bid.capacity;
                     unitPrice = bid.unitPrice }))
 
         let results = Seq.append previous_results partial_results
@@ -145,7 +145,7 @@ let runACA demands routes edge_prices increment_per_step =
             |> Seq.map ( decrement_on_route priced_closed_edges )
             |> Seq.zip bids
             |> Seq.map (
-                (fun (r,dec) -> close_edges_on_route dec r) >> 
+                (fun (r,dec) -> close_edges_on_route dec r) >>
                 (my_increment_price_function closed_edges_next ))
             |> Seq.toList
 
@@ -165,4 +165,3 @@ let runACA demands routes edge_prices increment_per_step =
             results
 
     loop Set.empty 0. initial_bids []
-
