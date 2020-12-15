@@ -11,7 +11,6 @@
     <Compile Include="Models.fs" />
     <Compile Include="DataSet1.fs" />
     <Compile Include="DataSet2.fs" />
-    <Compile Include="Dataset3.fs" />
     <Compile Include="Bidding.fs" />
     <Compile Include="ACA.fs" />
     <Compile Include="CCA.fs" />

@@ -8,8 +8,7 @@ type Edge = {
     id: int;
     fromNode : Node;
     toNode : Node;
-    capacityPositive : float;
-    capacityNegative : float;
+    capacity : float;
 }
 
 type Player = {

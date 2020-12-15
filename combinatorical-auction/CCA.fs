@@ -28,12 +28,12 @@ let private addEdgeConstraints bids (model:Model) (x:VariableCollection<Bid>) =
                 Variable.op_Multiply (x.[bid], quantity ) )
         model.AddConstraint (
             Expression.op_LessThanOrEqual (
-                Expression.Sum ( edgeBidVariables ), edge.capacityPositive),
+                Expression.Sum ( edgeBidVariables ), edge.capacity),
                 (sprintf "edge %i upper bound" edge.id )
             )
         model.AddConstraint (
             Expression.op_GreaterThanOrEqual (
-                Expression.Sum ( edgeBidVariables ), -edge.capacityNegative),
+                Expression.Sum ( edgeBidVariables ), -edge.capacity),
                 (sprintf "edge %i lower bound" edge.id )
             )
     )

@@ -10,12 +10,12 @@ let nodes = [
 ]
 
 let edges = [
-    { id = 1; fromNode = nodes.[1]; toNode = nodes.[0]; capacityPositive = 80.0; capacityNegative = 80.0; };
-    { id = 2; fromNode = nodes.[2]; toNode = nodes.[0]; capacityPositive = 75.0; capacityNegative = 75.0; };
-    { id = 3; fromNode = nodes.[3]; toNode = nodes.[0]; capacityPositive = 70.0; capacityNegative = 70.0; };
-    { id = 4; fromNode = nodes.[2]; toNode = nodes.[1]; capacityPositive = 60.0; capacityNegative = 60.0; };
-    { id = 5; fromNode = nodes.[3]; toNode = nodes.[1]; capacityPositive = 60.0; capacityNegative = 60.0; };
-    { id = 6; fromNode = nodes.[3]; toNode = nodes.[2]; capacityPositive = 60.0; capacityNegative = 60.0; };
+    { id = 1; fromNode = nodes.[1]; toNode = nodes.[0]; capacity = 80.0; };
+    { id = 2; fromNode = nodes.[2]; toNode = nodes.[0]; capacity = 75.0; };
+    { id = 3; fromNode = nodes.[3]; toNode = nodes.[0]; capacity = 70.0; };
+    { id = 4; fromNode = nodes.[2]; toNode = nodes.[1]; capacity = 60.0; };
+    { id = 5; fromNode = nodes.[3]; toNode = nodes.[1]; capacity = 60.0; };
+    { id = 6; fromNode = nodes.[3]; toNode = nodes.[2]; capacity = 60.0; };
 ]
 
 let players = [
@@ -81,7 +81,7 @@ let routes = [
     { id = 4; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[3], Direction.Positive; edges.[4], Direction.Negative ]; }
 ]
 
-let dataset : DataSet = { 
+let dataset : DataSet = {
     nodes = nodes;
     edges = edges;
     players = players;

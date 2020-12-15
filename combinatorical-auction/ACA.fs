@@ -60,7 +60,7 @@ let closed_edges (bids: TransportRoute seq) =
     |> Seq.groupBy fst
     |> Seq.map ( fun (e,quantities) ->
         let quantity = quantities |> Seq.sumBy snd
-        let on_going = quantity > e.capacityPositive || quantity < -e.capacityNegative
+        let on_going = quantity > e.capacity || quantity < -e.capacity
         (e, on_going)
     )
     |> Seq.filter (snd >> not)

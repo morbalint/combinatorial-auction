@@ -7,9 +7,9 @@ let private calcRouteCapacity (edges: (Edge * Direction) list) =
     edges
     |> List.map (fun (e,d) ->
         match d with
-        | Direction.Positive -> e.capacityPositive
-        | Direction.Negative -> e.capacityNegative
-        | _ -> failwith "unknown direction enum value")
+        | Direction.Positive -> e.capacity
+        | Direction.Negative -> e.capacity
+        | _ -> failwith (sprintf "unknown direction: '%A'" d))
     |> List.min
 
 let private calcRoutePrice (edgePrices: TransferPrice list) (route: Route) =
@@ -19,8 +19,8 @@ let private calcRoutePrice (edgePrices: TransferPrice list) (route: Route) =
         |> List.choose (fun p -> if p.forPlayer = route.player && p.onEdge = e then Some p.price else None)
         |> List.head)
 
-let private selectSourcePrice (sourcePrices: SourcePrice list) (player: Player) = 
-    sourcePrices 
+let private selectSourcePrice (sourcePrices: SourcePrice list) (player: Player) =
+    sourcePrices
     |> Seq.filter ( fun sp -> sp.toConsumer = player )
     |> Seq.map (fun sp -> sp.price)
     |> Seq.head
@@ -48,7 +48,7 @@ let private getSourceNodeFromRoute route =
     match firstDirection with
     | Direction.Positive -> firstEdge.fromNode
     | Direction.Negative -> firstEdge.toNode
-    | _ -> failwith "unknown direction enum value"
+    | _ -> failwith (sprintf "unknown direction: '%A'" firstDirection)
 
 let calcSourcePriceFromPricesAndRoute prices route =
     let sourceNode = getSourceNodeFromRoute route
