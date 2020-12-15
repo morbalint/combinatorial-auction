@@ -14,10 +14,12 @@
     <Compile Include="ACA.fs" />
     <Compile Include="CCA.fs" />
     <Compile Include="VCG.fs" />
+    <Compile Include="GeneticAlg.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GeneticSharp" Version="2.6.0" />
     <PackageReference Include="Microsoft.Z3.x64" Version="4.8.9" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="MathNet.Numerics.Data.Matlab" Version="4.0.0" />

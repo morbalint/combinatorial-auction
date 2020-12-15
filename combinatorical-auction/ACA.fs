@@ -2,13 +2,6 @@
 
 open CombinatorialAuction.Models
 
-type ResultSegment = {
-    player: Player;
-    edge: Edge;
-    capacity: float;
-    unitPrice: float;
-}
-
 let rec bid (demands: Demand list) (route: TransportRoute) =
     match demands with
     | demand::tail when demand.price > route.unitPrice ->

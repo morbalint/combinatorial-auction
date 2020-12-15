@@ -66,3 +66,10 @@ type BidResult = {
     acceptance: float
     payment: float
 }
+
+type ResultSegment = {
+    player: Player;
+    edge: Edge;
+    capacity: float;
+    unitPrice: float;
+}
