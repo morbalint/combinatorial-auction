@@ -16,14 +16,8 @@ let private calcRoutePrice (edgePrices: TransferPrice list) (route: Route) =
     route.edges
     |> List.sumBy (fun (e,_) ->
         edgePrices
-        |> List.choose (fun p -> if p.forPlayer = route.player && p.onEdge = e then Some p.price else None)
+        |> List.choose (fun p -> if p.onEdge = e then Some p.price else None)
         |> List.head)
-
-let private selectSourcePrice (sourcePrices: SourcePrice list) (player: Player) =
-    sourcePrices
-    |> Seq.filter ( fun sp -> sp.toConsumer = player )
-    |> Seq.map (fun sp -> sp.price)
-    |> Seq.head
 
 let public priceSingeRoute (edgePrices: TransferPrice list) (route: Route) =
     {
@@ -34,13 +28,13 @@ let public priceSingeRoute (edgePrices: TransferPrice list) (route: Route) =
         unitPrice = calcRoutePrice edgePrices route
     }
 
-let public priceSingleRouteWithSource (edgePrices: TransferPrice list) (sourcePrices: SourcePrice list) (route: Route) =
+let public priceSingleRouteWithSource (edgePrices: TransferPrice list) (route: Route) =
     {
         id = route.id;
         player = route.player;
         edges = route.edges;
         capacity = calcRouteCapacity route.edges
-        unitPrice = (calcRoutePrice edgePrices route) + (selectSourcePrice sourcePrices route.player)
+        unitPrice = (calcRoutePrice edgePrices route) + dataset.sourcePrice
     }
 
 let private getSourceNodeFromRoute route =
@@ -50,22 +44,7 @@ let private getSourceNodeFromRoute route =
     | Direction.Negative -> firstEdge.toNode
     | _ -> failwith (sprintf "unknown direction: '%A'" firstDirection)
 
-let calcSourcePriceFromPricesAndRoute prices route =
-    let sourceNode = getSourceNodeFromRoute route
-    let sourcePrice =
-        prices
-        |> List.filter (fun sp -> sp.toConsumer = route.player && sp.fromProducer = sourceNode)
-        |> List.map (fun sp -> sp.price)
-    match sourcePrice with
-    | [] -> failwith "source price not found"
-    | [head] -> head
-    | _::_ -> failwith "too many source prices found"
-
-/// TODO: remove data dependency
-let calcSourcePrice = calcSourcePriceFromPricesAndRoute prices;
-
 let calcBidsForSingleRoute (demands: Demand list) route =
-    let sourcePrice = calcSourcePrice route
     let bidPieces =
         demands
         |> List.filter (fun d -> d.player = route.player)
@@ -74,7 +53,7 @@ let calcBidsForSingleRoute (demands: Demand list) route =
             {
                 route = route;
                 quantity = d.toAmount;
-                totalPrice = (d.toAmount - d.fromAmount) * ( d.price - route.unitPrice - sourcePrice );
+                totalPrice = (d.toAmount - d.fromAmount) * ( d.price - route.unitPrice - dataset.sourcePrice );
             })
     let (bids : Bid list, _) =
         List.mapFold

@@ -26,30 +26,12 @@ let players = [
 ]
 
 let edgePrices = [
-    { forPlayer = players.[1]; onEdge = edges.[0]; price = 9.0; }
-    { forPlayer = players.[2]; onEdge = edges.[0]; price = 9.0; }
-    { forPlayer = players.[3]; onEdge = edges.[0]; price = 9.0; }
-    { forPlayer = players.[1]; onEdge = edges.[1]; price = 8.0; }
-    { forPlayer = players.[2]; onEdge = edges.[1]; price = 8.0; }
-    { forPlayer = players.[3]; onEdge = edges.[1]; price = 8.0; }
-    { forPlayer = players.[1]; onEdge = edges.[2]; price = 11.0; }
-    { forPlayer = players.[2]; onEdge = edges.[2]; price = 11.0; }
-    { forPlayer = players.[3]; onEdge = edges.[2]; price = 11.0; }
-    { forPlayer = players.[1]; onEdge = edges.[3]; price = 4.0; }
-    { forPlayer = players.[2]; onEdge = edges.[3]; price = 4.0; }
-    { forPlayer = players.[3]; onEdge = edges.[3]; price = 4.0; }
-    { forPlayer = players.[1]; onEdge = edges.[4]; price = 4.5; }
-    { forPlayer = players.[2]; onEdge = edges.[4]; price = 4.5; }
-    { forPlayer = players.[3]; onEdge = edges.[4]; price = 4.5; }
-    { forPlayer = players.[1]; onEdge = edges.[5]; price = 5.0; }
-    { forPlayer = players.[2]; onEdge = edges.[5]; price = 5.0; }
-    { forPlayer = players.[3]; onEdge = edges.[5]; price = 5.0; }
-]
-
-let prices = [
-    { fromProducer = nodes.[0]; toConsumer = players.[1]; price = 23.0; };
-    { fromProducer = nodes.[0]; toConsumer = players.[2]; price = 23.0; };
-    { fromProducer = nodes.[0]; toConsumer = players.[3]; price = 23.0; };
+    { onEdge = edges.[0]; price = 9.0; }
+    { onEdge = edges.[1]; price = 8.0; }
+    { onEdge = edges.[2]; price = 11.0; }
+    { onEdge = edges.[3]; price = 4.0; }
+    { onEdge = edges.[4]; price = 4.5; }
+    { onEdge = edges.[5]; price = 5.0; }
 ]
 
 let demands = [
@@ -75,10 +57,12 @@ let routes = [
     { id = 2; player = players.[2]; edges = [ edges.[0], Direction.Negative; edges.[3], Direction.Negative ]; }
     { id = 4; player = players.[2]; edges = [ edges.[2], Direction.Negative; edges.[5], Direction.Positive ]; }
     { id = 3; player = players.[2]; edges = [ edges.[2], Direction.Negative; edges.[4], Direction.Positive; edges.[3], Direction.Negative ]; }
+    { id = 5; player = players.[2]; edges = [ edges.[0], Direction.Negative; edges.[4], Direction.Negative; edges.[5], Direction.Positive ]; }
     { id = 1; player = players.[3]; edges = [ edges.[2], Direction.Negative ]; }
     { id = 2; player = players.[3]; edges = [ edges.[0], Direction.Negative; edges.[4], Direction.Negative ]; }
     { id = 3; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[5], Direction.Negative ]; }
     { id = 4; player = players.[3]; edges = [ edges.[1], Direction.Negative; edges.[3], Direction.Positive; edges.[4], Direction.Negative ]; }
+    { id = 5; player = players.[3]; edges = [ edges.[0], Direction.Negative; edges.[3], Direction.Negative; edges.[5], Direction.Negative ]; }
 ]
 
 let dataset : DataSet = {
@@ -86,7 +70,7 @@ let dataset : DataSet = {
     edges = edges;
     players = players;
     demands = demands;
-    sourcePrices = prices;
+    sourcePrice = 23.;
     transferPrices = edgePrices;
     routes = routes;
 }

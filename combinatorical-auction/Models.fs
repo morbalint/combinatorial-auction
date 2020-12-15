@@ -24,14 +24,7 @@ type Demand = {
     price: float;
 }
 
-type SourcePrice = {
-    fromProducer: Node;
-    toConsumer: Player;
-    price: float;
-}
-
 type TransferPrice = {
-    forPlayer: Player;
     onEdge: Edge;
     price: float;
 }
@@ -49,7 +42,7 @@ type DataSet = {
     edges: Edge list
     players: Player list
     demands: Demand list
-    sourcePrices: SourcePrice list
+    sourcePrice: float
     transferPrices: TransferPrice list
     routes: Route list
 }

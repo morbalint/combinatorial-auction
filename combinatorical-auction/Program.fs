@@ -161,7 +161,7 @@ let printer title data =
 
 let ACAtester () =
     let transport_routes =
-        List.map (priceSingleRouteWithSource edgePrices prices) routes
+        List.map (priceSingleRouteWithSource edgePrices) routes
 
     let bids_0 =
         ACA.make_bids DataSet2.demands transport_routes
@@ -269,7 +269,7 @@ let ACAtester () =
 
 let runACA () =
     let transport_routes =
-        List.map (priceSingleRouteWithSource edgePrices prices) routes
+        List.map (priceSingleRouteWithSource edgePrices) routes
 
     let results =
         ACA.runACA demands transport_routes edgePrices 1.
@@ -288,14 +288,13 @@ let runACA () =
     |> Seq.iter (fun (e, q) ->
         let basePrice =
             ((edgePrices |> Seq.find (fun t -> t.onEdge = e)).price)
-            + DataSet2.prices.Head.price
+            + dataset.sourcePrice
 
         let res =
             q
             |> Seq.map (fun r -> (r.player.id, r.capacity, r.unitPrice - basePrice))
 
         printer (sprintf "Results on edge %i" e.id) res)
-
 
 [<EntryPoint>]
 let main argv =
@@ -304,7 +303,6 @@ let main argv =
     let clock = System.Diagnostics.Stopwatch.StartNew()
 
     runACA ()
-
 
     // let bids = getBids ()
     //let vcgRes = bids |> VCG.detailedVcg
