@@ -28,13 +28,13 @@ let public priceSingeRoute (edgePrices: TransferPrice list) (route: Route) =
         unitPrice = calcRoutePrice edgePrices route
     }
 
-let public priceSingleRouteWithSource (edgePrices: TransferPrice list) (route: Route) =
+let public priceSingleRouteWithSource (source_price: float) (edgePrices: TransferPrice list) (route: Route) =
     {
         id = route.id;
         player = route.player;
         edges = route.edges;
         capacity = calcRouteCapacity route.edges
-        unitPrice = (calcRoutePrice edgePrices route) + dataset.sourcePrice
+        unitPrice = (calcRoutePrice edgePrices route) + source_price
     }
 
 let private getSourceNodeFromRoute route =
@@ -44,7 +44,7 @@ let private getSourceNodeFromRoute route =
     | Direction.Negative -> firstEdge.toNode
     | _ -> failwith (sprintf "unknown direction: '%A'" firstDirection)
 
-let calcBidsForSingleRoute (demands: Demand list) route =
+let calcBidsForSingleRoute (demands: Demand list) (route: TransportRoute) =
     let bidPieces =
         demands
         |> List.filter (fun d -> d.player = route.player)
@@ -69,7 +69,7 @@ let bidsFromPricedRoutes (demands: Demand list) routes =
     |> List.sortBy (fun bid -> bid.route.player.id)
 
 /// TODO: remove data dependency
-let getPricedRoutes () = List.map (priceSingeRoute edgePrices) routes;
+let getPricedRoutes () = List.map (priceSingeRoute edgePrices) dataset.routes;
 
 /// TODO: remove data dependency
 let getBids () = bidsFromPricedRoutes demands (getPricedRoutes ())

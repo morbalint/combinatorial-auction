@@ -7,6 +7,13 @@ open ACA
 open CCA
 open Models
 open DataSet2
+open GeneticSharp.Domain.Selections
+open GeneticSharp.Domain.Crossovers
+open GeneticSharp.Domain.Mutations
+open GeneticAlg
+open GeneticSharp.Domain.Populations
+open GeneticSharp.Domain
+open GeneticSharp.Domain.Terminations
 
 let directedEdgePrinter (edge, direction) =
     match direction with
@@ -160,8 +167,7 @@ let printer title data =
     printfn "=================="
 
 let ACAtester () =
-    let transport_routes =
-        List.map (priceSingleRouteWithSource edgePrices) routes
+    let transport_routes = List.map (priceSingleRouteWithSource dataset.sourcePrice edgePrices) routes
 
     let bids_0 =
         ACA.make_bids DataSet2.demands transport_routes
@@ -266,14 +272,7 @@ let ACAtester () =
             |> Seq.map (fun r -> (r.player.id, r.capacity, r.unitPrice))
 
         printer (sprintf "Results on edge %i" e.id) res)
-
-let runACA () =
-    let transport_routes =
-        List.map (priceSingleRouteWithSource edgePrices) routes
-
-    let results =
-        ACA.runACA demands transport_routes edgePrices 1.
-
+let results_by_player results =
     results
     |> Seq.groupBy (fun r -> r.player)
     |> Seq.iter (fun (p, q) ->
@@ -282,6 +281,8 @@ let runACA () =
             |> Seq.map (fun r -> (r.edge, r.capacity, r.unitPrice))
 
         printer (sprintf "Results of player %i" p.id) res)
+
+let results_by_edge results =
     results
     |> Seq.groupBy (fun r -> r.edge)
     |> Seq.sortBy fst
@@ -296,13 +297,50 @@ let runACA () =
 
         printer (sprintf "Results on edge %i" e.id) res)
 
+let runACA () =
+    let transport_routes = List.map (priceSingleRouteWithSource dataset.sourcePrice edgePrices) routes
+
+    let results =
+        ACA.runACA demands transport_routes edgePrices 1.
+
+    results_by_player results
+    results_by_edge results
+
+let runGeneticGenerator () =
+    let selection = EliteSelection ()
+    let crossover = OrderedCrossover ()
+    let mutation = ReverseSequenceMutation()
+    let fitness = MyFitness ()
+    let chromosome = MyChromosome ()
+    let population = Population (50, 70, chromosome);
+    let ga = GeneticAlgorithm (population, fitness, selection, crossover, mutation)
+    ga.Termination <- GenerationNumberTermination 100
+    printfn "GA running..."
+    ga.Start ()
+    ga.BestChromosome
+
 [<EntryPoint>]
 let main argv =
     printfn "Hello World from F#!"
 
     let clock = System.Diagnostics.Stopwatch.StartNew()
 
-    runACA ()
+    let bestChromosome = runGeneticGenerator ()
+
+    let transfer_prices = GeneticAlg.``Get transfer prices from chromosome`` bestChromosome
+    let aca_result = GeneticAlg.run_aca_with_custom_prices transfer_prices
+    let cca_result = GeneticAlg.run_cca_with_custom_prices transfer_prices
+
+    printfn "Best solution found has %f fitness." bestChromosome.Fitness.Value
+    printfn "The best genes are %A" (bestChromosome.GetGenes () )
+    printfn "======== ACA results ==========="
+    results_by_player aca_result
+    results_by_edge  aca_result
+    printfn "======== CCA results ==========="
+    results_by_player cca_result
+    results_by_edge  cca_result
+
+    // runACA ()
 
     // let bids = getBids ()
     //let vcgRes = bids |> VCG.detailedVcg
